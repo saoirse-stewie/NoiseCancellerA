@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -24,11 +25,17 @@ import java.util.ArrayList;
 public class MyActivity extends Activity {
 
 
+
     private static final int REQUEST_PICKER = 1;
     private static final int PICK_FROM_FILE = 1;
     final static int RQS_RECORDING = 1;
     MediaRecorder recorder = new MediaRecorder();
-    private String outputfile = null;
+    //private String outputfile = "/sdcard/sample.mp4";
+    String path = Environment.getExternalStorageDirectory().toString() + "/" + "Download";
+    File outputfile = new File(path, "sample.mp4");
+
+
+    //String audioname = "sample.mp4";
     private MediaPlayer mPlayer = null;
     Uri savedUri;
     Button b;
@@ -48,11 +55,15 @@ public class MyActivity extends Activity {
         b2.setEnabled(false);
         b3.setEnabled(false);
 
+        //boolean exists = (new File(outputfile)).exists();
+        //if (!exists){new File(outputfile).mkdirs();}
+
+
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         recorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        recorder.setOutputFile(outputfile);
+        recorder.setOutputFile(String.valueOf(outputfile));
 
         mPlayer = new MediaPlayer();
         b.setOnClickListener(new View.OnClickListener() {
@@ -60,10 +71,16 @@ public class MyActivity extends Activity {
             public void onClick(View v) {
                 try {
                     recorder.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                recorder.start();
+
+                    recorder.start();
+
+            }   catch (IllegalStateException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+             catch (IOException e) {
+                e.printStackTrace();
+            }
 
                 b.setEnabled(false);
                 b3.setEnabled(true);
@@ -71,15 +88,21 @@ public class MyActivity extends Activity {
                 Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
             }
         });
-        b.setOnClickListener(new View.OnClickListener() {
+        b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                try {
                 recorder.stop();
                 recorder.release();
                 recorder = null;
                 b3.setEnabled(false);
-                b.setEnabled(true);
+                b2.setEnabled(true);
                 Toast.makeText(getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG).show();
+               }catch (IllegalStateException e) {
+
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -91,7 +114,7 @@ public class MyActivity extends Activity {
                 MediaPlayer m = new MediaPlayer();
 
                 try {
-                    m.setDataSource(outputfile);
+                    m.setDataSource(String.valueOf(outputfile));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -106,13 +129,7 @@ public class MyActivity extends Activity {
                 Toast.makeText(getApplicationContext(), "Playing audio", Toast.LENGTH_LONG).show();
             }
         });
-        mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
 
-                mPlayer.start();
-            }
-        });
 
 
     }
@@ -125,7 +142,7 @@ public class MyActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -138,9 +155,9 @@ public class MyActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        //if (id == R.id.action_settings) {
+            //return true;
+        //}
         return super.onOptionsItemSelected(item);
     }
 
