@@ -20,6 +20,16 @@
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Filter"
+            android:id="@+id/btn7" android:layout_gravity="right"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play Filtered"
+            android:id="@+id/btn8" android:layout_gravity="right"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Record #2"
             android:id="@+id/btn4"/>
     <Button
@@ -33,10 +43,6 @@
             android:text="Stop #2"
             android:id="@+id/btn6"/>
 
-    <TextView android:layout_width="match_parent"
-              android:id="@+id/txt"
-              android:text="bytes"
-              android:layout_height="wrap_content" android:layout_weight="0.28"/>
 
 </LinearLayout>
 
